@@ -1,0 +1,168 @@
+A)CODE:-
+table = {
+   ('A' , 'Dirty'): 'Suck',
+   ('A' , 'Clean'): ' Move Right',
+  
+   ('B' , 'Dirty'): 'Suck',
+   ('B' , 'Clean'): 'Move Forward',
+
+
+   ('C' , 'Dirty'): 'Suck',
+   ('C' , 'Clean'): 'Move Backward',
+
+
+   ('D' , 'Dirty'): 'Suck',
+   ('D' , 'Clean'): 'Move Left'
+}
+
+
+sequence_table = {
+   (('A' , 'Dirty') , ('A' , 'Clean')): 'Move Right',
+   (('A' , 'Clean') , ('A' , 'Dirty')): 'Suck',
+   (('B' , 'Dirty') , ('B' , 'Clean')): 'Move Forward',
+   (('B' , 'Clean') , ('B' , 'Dirty')): 'Suck',
+   (('C' , 'Dirty') , ('C' , 'Clean')): 'Move Backward',
+   (('C' , 'Clean') , ('C' , 'Dirty')): 'Suck',
+   (('D' , 'Dirty') , ('D' , 'Clean')): 'Move Left',
+   (('D' , 'Clean') , ('D' , 'Dirty')): 'Suck'
+}
+
+
+percepts = []
+
+
+def table_driven_agent(percept):
+   percepts.append(percept)
+
+
+   if tuple(percepts) in sequence_table:
+       return sequence_table[tuple(percepts)]
+  
+   return table.get(percept , "No Operation")
+
+
+print("Vaccum Cleaner Table-Driven Agent")
+
+
+n = int(input("Enter no.of Percepts: "))
+
+
+for i in range(n):
+   print(f"\nPercept {i + 1}")
+
+
+   location = input("Enter Location (A/B/C/D): ").upper()
+   status = input("Enter Status (Clean/Dirty): ").capitalize()
+
+
+   percept = (location , status)
+   action = table_driven_agent(percept)
+
+
+   print("Percept History: ",percepts)
+   print("Agent Action: ",action)
+
+B)CODE:-
+table = {
+   ('A', 'Green', 'No', 'Yes'): 'Pick Up Passenger',
+   ('A', 'Green', 'No', 'No'): 'Move Forward',
+
+
+   ('B', 'Red', 'Yes', 'No'): 'Stop',
+   ('B', 'Green', 'Yes', 'No'): 'Drive to Destination',
+
+
+   ('C', 'Yellow', 'No', 'No'): 'Slow Down',
+   ('C', 'Green', 'No', 'No'): 'Pick Up Passenger',
+
+
+   ('D', 'Red', 'Yes', 'No'): 'Stop',
+   ('D', 'Green', 'Yes', 'Yes'): 'Drop Passenger'
+}
+
+
+percepts = []
+
+
+def taxi_agent(percept):
+   percepts.append(percept)
+   action = table.get(percept, "Wait")
+   return action
+
+
+print("Autonomous Taxi Table-Driven Agent")
+
+
+n = int(input("Enter the no.of percepts: "))
+
+
+for i in range(n):
+   print(f"\nPercept {i + 1}")
+
+
+   location = input("Location (A/B/C/D): ").upper()
+   signal = input("Traffic Signal (Green/Yellow/Red): ").capitalize()
+   passenger = input("Passenger in Car? (Yes/No): ").capitalize()
+   request = input("Ride Request? (Yes/No): ").capitalize()
+
+
+   percept = (location, signal, passenger, request)
+
+
+   action = taxi_agent(percept)
+
+
+   print("Current Percept:", percept)
+   print("Agent Action:", action)
+
+OWN)CODE:-
+table = {
+   ('Living Room', 'Hot', 'Yes'): 'Turn On AC',
+   ('Living Room', 'Cold', 'No'): 'Turn Off AC',
+
+
+   ('Bedroom', 'Hot', 'Yes'): 'Turn On Fan',
+   ('Bedroom', 'Cold', 'No'): 'Turn Off Fan',
+
+
+   ('Kitchen', 'Hot', 'Yes'): 'Start Exhaust Fan',
+   ('Kitchen', 'Cold', 'No'): 'Turn Off Exhaust Fan',
+
+
+   ('Garage', 'Cold', 'Yes'): 'Turn On Light',
+   ('Garage', 'Hot', 'No'): 'Turn Off Light'
+}
+
+
+percepts = []
+
+
+def smart_home_agent(percept):
+   percepts.append(percept)
+   return table.get(percept, "No Action")
+
+
+print("Smart Home Table-Driven Agent")
+
+
+n = int(input("Enter number of percepts: "))
+
+
+for i in range(n):
+   print(f"\nPercept {i + 1}")
+
+
+   location = input("Enter Location (Living Room/Bedroom/Kitchen/Garage): ").title()
+   temperature = input("Enter Temperature (Hot/Cold): ").capitalize()
+   motion = input("Motion Detected? (Yes/No): ").capitalize()
+
+
+   percept = (location, temperature, motion)
+
+
+   action = smart_home_agent(percept)
+
+
+   print("Current Percept :", percept)
+   print("Percept History :", percepts)
+   print("Agent Action    :", action)
