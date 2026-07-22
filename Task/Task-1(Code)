@@ -1,0 +1,349 @@
+code:-
+from collections import deque
+import heapq
+
+# -------------------------------
+# Graph (Bidirectional)
+# -------------------------------
+
+graph = {
+
+    "MVLU College": [
+        ("Andheri", 1),
+        ("Andheri Station", 1)
+    ],
+
+    "Andheri": [
+        ("MVLU College", 1),
+        ("Dahisar Check Naka", 15)
+    ],
+
+    "Andheri Station": [
+        ("MVLU College", 1),
+        ("Mira Road Station", 18)
+    ],
+
+    "Dahisar Check Naka": [
+        ("Andheri", 15),
+        ("Mira Road", 5)
+    ],
+
+    "Mira Road": [
+        ("Dahisar Check Naka", 5),
+        ("Home", 2)
+    ],
+
+    "Mira Road Station": [
+        ("Andheri Station", 18),
+        ("Home", 2)
+    ],
+
+    "Home": [
+        ("Mira Road", 2),
+        ("Mira Road Station", 2)
+    ]
+}
+
+
+# -------------------------------
+# Heuristic Values (towards Home)
+# -------------------------------
+
+heuristic = {
+
+    "MVLU College": 21,
+    "Andheri": 22,
+    "Andheri Station": 20,
+    "Dahisar Check Naka": 7,
+    "Mira Road": 2,
+    "Mira Road Station": 2,
+    "Home": 0
+}
+
+
+# --------------------------------
+# Breadth First Search (BFS)
+# --------------------------------
+
+def bfs(start, goal):
+
+    queue = deque([(start, [start], 0)])
+    visited = {start}
+    explored = 0
+
+    while queue:
+
+        node, path, cost = queue.popleft()
+        explored += 1
+
+        if node == goal:
+            return path, cost, explored
+
+        for neighbour, edge_cost in graph[node]:
+
+            if neighbour not in visited:
+
+                visited.add(neighbour)
+
+                queue.append(
+                    (
+                        neighbour,
+                        path + [neighbour],
+                        cost + edge_cost
+                    )
+                )
+
+    return None
+
+
+
+# --------------------------------
+# Depth First Search (DFS)
+# --------------------------------
+
+def dfs(start, goal):
+
+    stack = [(start, [start], 0)]
+    visited = set()
+    explored = 0
+
+    while stack:
+
+        node, path, cost = stack.pop()
+
+        if node not in visited:
+
+            visited.add(node)
+            explored += 1
+
+            if node == goal:
+                return path, cost, explored
+
+
+            for neighbour, edge_cost in reversed(graph[node]):
+
+                if neighbour not in visited:
+
+                    stack.append(
+                        (
+                            neighbour,
+                            path + [neighbour],
+                            cost + edge_cost
+                        )
+                    )
+
+    return None
+
+
+
+# --------------------------------
+# Uniform Cost Search (UCS)
+# --------------------------------
+
+def ucs(start, goal):
+
+    pq = [(0, start, [start])]
+
+    visited = set()
+    explored = 0
+
+
+    while pq:
+
+        cost, node, path = heapq.heappop(pq)
+
+
+        if node in visited:
+            continue
+
+
+        visited.add(node)
+        explored += 1
+
+
+        if node == goal:
+            return path, cost, explored
+
+
+        for neighbour, edge_cost in graph[node]:
+
+            if neighbour not in visited:
+
+                heapq.heappush(
+                    pq,
+                    (
+                        cost + edge_cost,
+                        neighbour,
+                        path + [neighbour]
+                    )
+                )
+
+    return None
+
+
+
+# --------------------------------
+# Greedy Best First Search
+# --------------------------------
+
+def greedy(start, goal):
+
+    pq = [
+        (
+            heuristic[start],
+            start,
+            [start],
+            0
+        )
+    ]
+
+    visited = set()
+    explored = 0
+
+
+    while pq:
+
+        h, node, path, cost = heapq.heappop(pq)
+
+
+        if node in visited:
+            continue
+
+
+        visited.add(node)
+        explored += 1
+
+
+        if node == goal:
+            return path, cost, explored
+
+
+        for neighbour, edge_cost in graph[node]:
+
+            if neighbour not in visited:
+
+                heapq.heappush(
+                    pq,
+                    (
+                        heuristic[neighbour],
+                        neighbour,
+                        path + [neighbour],
+                        cost + edge_cost
+                    )
+                )
+
+    return None
+
+
+
+# --------------------------------
+# A* Search
+# --------------------------------
+
+def astar(start, goal):
+
+    pq = [
+        (
+            heuristic[start],
+            0,
+            start,
+            [start]
+        )
+    ]
+
+
+    visited = set()
+    explored = 0
+
+
+    while pq:
+
+        f, g, node, path = heapq.heappop(pq)
+
+
+        if node in visited:
+            continue
+
+
+        visited.add(node)
+        explored += 1
+
+
+        if node == goal:
+            return path, g, explored
+
+
+        for neighbour, edge_cost in graph[node]:
+
+
+            if neighbour not in visited:
+
+
+                new_g = g + edge_cost
+
+                new_f = new_g + heuristic[neighbour]
+
+
+                heapq.heappush(
+                    pq,
+                    (
+                        new_f,
+                        new_g,
+                        neighbour,
+                        path + [neighbour]
+                    )
+                )
+
+    return None
+
+
+
+# --------------------------------
+# Execute All Algorithms
+# --------------------------------
+
+algorithms = [
+
+    ("Breadth First Search (BFS)", bfs),
+
+    ("Depth First Search (DFS)", dfs),
+
+    ("Uniform Cost Search (UCS)", ucs),
+
+    ("Greedy Best First Search", greedy),
+
+    ("A* Search", astar)
+
+]
+
+
+start = "MVLU College"
+goal = "Home"
+
+
+
+for name, algorithm in algorithms:
+
+
+    result = algorithm(start, goal)
+
+
+    print("=" * 60)
+
+    print(name)
+
+
+    if result is None:
+
+        print("No path found!")
+
+    else:
+
+        path, cost, explored = result
+
+
+        print("Path :", " -> ".join(path))
+
+        print("Total Path Cost :", cost, "km")
+
+        print("Number of Nodes Explored :", explored)
