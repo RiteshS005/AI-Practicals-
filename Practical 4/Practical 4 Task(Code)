@@ -1,0 +1,31 @@
+1)
+Code:-
+P_Python = 0.20
+P_Java = 0.80
+
+P_Placed_Python = 0.90
+P_Placed_Java = 0.40
+
+P_Placed = (P_Placed_Python * P_Python) + (P_Placed_Java * P_Java)
+
+P_Python_Placed = (P_Placed_Python * P_Python) / P_Placed
+
+print("Probability student knows Python:", P_Python)
+print("Probability student knows Java:", P_Java)
+print("Probability placed student knows Python:",
+      round(P_Python_Placed * 100, 2), "%")
+
+2)
+Code:-
+P_Blue = 0.15
+P_Green = 0.85
+
+P_SaysBlue_Blue = 0.80
+P_SaysBlue_Green = 0.20
+
+P_SaysBlue = (P_SaysBlue_Blue * P_Blue) + (P_SaysBlue_Green * P_Green)
+
+P_Blue_SaysBlue = (P_SaysBlue_Blue * P_Blue) / P_SaysBlue
+
+print("Probability taxi was actually Blue:",
+      round(P_Blue_SaysBlue * 100, 2), "%")
